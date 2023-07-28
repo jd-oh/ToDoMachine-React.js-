@@ -17,26 +17,39 @@ function App() {
   const [todos, setTodos] = React.useState(defaultTodos);
   const [searchValue, setSearchValue] = React.useState("");
 
+  // Contador de todos completados
   const completedTodos = todos.filter((todo) => todo.completed).length;
+
   const totalTodos = todos.length;
 
   let searchedTodos = [];
 
+  //Buscar un todo en especifico
   if (!searchValue.length >= 1) {
     searchedTodos = todos;
   } else {
     searchedTodos = todos.filter((todo) => {
       const todoText = todo.text.toLowerCase();
-      const searchText = searchValue.toLowerCase();
+      const searchText = searchValue.toLocaleLowerCase();
       return todoText.includes(searchText);
     });
   }
 
+  // Al hacer click en el icono de check, se cambia el estado de completed a true
+  //Los tres puntos son para hacer una copia del arreglo y no modificar el original
   const completeTodos = (text) => {
     const todoIndex = todos.findIndex((todo) => todo.text === text);
 
     const newTodos = [...todos];
     newTodos[todoIndex].completed = true;
+    setTodos(newTodos);
+  };
+
+  const deleteTodos = (text) => {
+    const todoIndex = todos.findIndex((todo) => todo.text === text);
+
+    const newTodos = [...todos];
+    newTodos.splice(todoIndex, 1);
     setTodos(newTodos);
   };
 
@@ -58,6 +71,7 @@ function App() {
                 text={todo.text}
                 completed={todo.completed}
                 onComplete={() => completeTodos(todo.text)}
+                onDelete={() => deleteTodos(todo.text)}
               />
             ))}
           </TodoList>
