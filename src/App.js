@@ -7,14 +7,43 @@ import { CreateTodoButton } from "./components/CreateTodoButton";
 import { CardIndex } from "./components/cardIndex";
 /*import './App.css'*/
 
-const defaultTodos = [
-  { text: "Cortar cebolla", completed: true },
-  { text: "Tomar curso de React", completed: false },
-  { text: "Llorar con la llorona", completed: false },
-];
+// const defaultTodos = [
+//   { text: "Cortar cebolla", completed: true },
+//   { text: "Tomar curso de React", completed: false },
+//   { text: "Llorar con la llorona", completed: false },
+// ];
 
+// localStorage.setItem("todos", JSON.stringify(defaultTodos));
+// localStorage.removeItem("todos");
+
+function useLocalStorage(itemName, initialValue) {
+  const localStorageItem = localStorage.getItem(itemName);
+
+  let parsedItems;
+
+  // Si no hay nada en el localStorage, se crea un arreglo vacio y se convierte a string
+  if (!localStorageItem) {
+    localStorage.setItem(itemName, JSON.stringify(initialValue));
+    parsedItems = initialValue;
+    // Si hay algo en el localStorage, se convierte a un arreglo lo que hay en el localStorage
+  } else {
+    parsedItems = JSON.parse(localStorageItem);
+  }
+
+  const [item, setItem] = React.useState(parsedItems);
+  //Para no solo actualizar el estado, sino tambien el localStorage
+  const saveItem = (newItems) => {
+    const stringifiedTodos = JSON.stringify(newItems);
+    localStorage.setItem(itemName, stringifiedTodos);
+    setItem(newItems);
+  };
+
+  //En los hooks siempre se debe retornar algo
+  return [item, saveItem];
+}
 function App() {
-  const [todos, setTodos] = React.useState(defaultTodos);
+  const [todos, saveTodos] = useLocalStorage("todos", []);
+  //const [todos, setTodos] = React.useState(parsedTodos);
   const [searchValue, setSearchValue] = React.useState("");
 
   // Contador de todos completados
@@ -42,7 +71,7 @@ function App() {
 
     const newTodos = [...todos];
     newTodos[todoIndex].completed = true;
-    setTodos(newTodos);
+    saveTodos(newTodos);
   };
 
   const deleteTodos = (text) => {
@@ -50,7 +79,13 @@ function App() {
 
     const newTodos = [...todos];
     newTodos.splice(todoIndex, 1);
-    setTodos(newTodos);
+    saveTodos(newTodos);
+  };
+
+  //Cuando todos los todos se hayan completados, muestra un mensaje
+  const allCompletedTodos = () => {
+    if (completedTodos === totalTodos) {
+    }
   };
 
   if (totalTodos > 0) {
@@ -59,7 +94,11 @@ function App() {
         <CardIndex
           percentage={((completedTodos / totalTodos) * 100).toFixed(2)}
         >
-          <TodoCounter total={totalTodos} completed={completedTodos} />
+          <TodoCounter
+            total={totalTodos}
+            completed={completedTodos}
+            onAllCompletedTodos={() => allCompletedTodos()}
+          />
           <TodoSearch
             searchValue={searchValue}
             setSearchValue={setSearchValue}
