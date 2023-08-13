@@ -40,11 +40,6 @@ function App() {
       return todoText.includes(searchText);
     });
   }
-  //Cuando todos los todos se hayan completados, muestra un mensaje
-  const allCompletedTodos = (total, completed) => {
-    if (completedTodos === total) {
-    }
-  };
 
   // Al hacer click en el icono de check, se cambia el estado de completed a true
   //Los tres puntos son para hacer una copia del arreglo y no modificar el original
@@ -75,7 +70,6 @@ function App() {
       searchValue={searchValue}
       setSearchValue={setSearchValue}
       searchedTodos={searchedTodos}
-      allCompletedTodos={allCompletedTodos}
     />
   );
 }

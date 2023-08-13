@@ -21,11 +21,7 @@ function AppUI({
   return (
     <React.Fragment>
       <CardIndex percentage={((completedTodos / totalTodos) * 100).toFixed(2)}>
-        <TodoCounter
-          total={totalTodos}
-          completed={completedTodos}
-          onAllCompletedTodos={() => allCompletedTodos()}
-        />
+        <TodoCounter total={totalTodos} completed={completedTodos} />
         <TodoSearch searchValue={searchValue} setSearchValue={setSearchValue} />
         <TodoList>
           {loading && <p>Cargando...</p>}
